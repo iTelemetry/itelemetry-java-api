@@ -1,32 +1,37 @@
 package app.itelemetry.api.session;
 
-import app.itelemetry.client.iracing.yml.IRSession;
-import app.itelemetry.data.messages.protos.SessionType;
+import app.itelemetry.api.iracing.memory.MemoryMap;
+import app.itelemetry.api.iracing.yml.IRSession;
+import app.itelemetry.api.iracing.yml.IRSessionType;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
-import static app.itelemetry.client.iracing.memory.MemoryMapImpl.MAP;
-
 public class LiveSession implements Session {
 
+    private final MemoryMap map;
+
+    public LiveSession(MemoryMap map) {
+        this.map = map;
+    }
+
     private IRSession getIRSession() {
-        return MAP.getData().getSessionInfo().getSessions().get(getNumber());
+        return map.getData().getSessionInfo().getSessions().get(getNumber());
     }
 
     @Override
     public int getUid() {
-        return (int) MAP.getHeader("SessionUniqueId").getValue();
+        return (int) map.getHeader("SessionUniqueId").getValue();
     }
 
     @Override
     public int getNumber() {
-        return (int) MAP.getHeader("SessionNum").getValue();
+        return (int) map.getHeader("SessionNum").getValue();
     }
 
     @Override
     public SessionFlags getFlags() {
-        return new LiveSessionFlags();
+        return new LiveSessionFlags(map);
     }
 
     @Override
@@ -36,12 +41,12 @@ public class LiveSession implements Session {
 
     @Override
     public int getLapsRemaining() {
-        return (int) MAP.getHeader("SessionLapsRemain").getValue();
+        return (int) map.getHeader("SessionLapsRemain").getValue();
     }
 
     @Override
     public ZonedDateTime getStartTime() {
-        Double sessionTime = (Double) MAP.getHeader("SessionTime").getValue();
+        Double sessionTime = (Double) map.getHeader("SessionTime").getValue();
 
         long sessionNanos = Math.round(sessionTime * 1e+9);
         return ZonedDateTime.now(ZoneId.systemDefault()).minusNanos(sessionNanos);
@@ -49,12 +54,12 @@ public class LiveSession implements Session {
 
     @Override
     public double getRunningTime() {
-        return (Double) MAP.getHeader("SessionTime").getValue();
+        return (Double) map.getHeader("SessionTime").getValue();
     }
 
     @Override
     public double getTimeRemaining() {
-        return (Double) MAP.getHeader("SessionTimeRemain").getValue();
+        return (Double) map.getHeader("SessionTimeRemain").getValue();
     }
 
     @Override
@@ -63,15 +68,15 @@ public class LiveSession implements Session {
     }
 
     @Override
-    public SessionType getType() {
+    public IRSessionType getType() {
         IRSession session = getIRSession();
-        SessionType sessionType = SessionType.UNKNOWN_TYPE;
+        IRSessionType sessionType = IRSessionType.UNKNOWN;
         if (session.getSessionType().toLowerCase().contains("practice")) {
-            sessionType = SessionType.PRACTICE;
+            sessionType = IRSessionType.PRACTICE;
         } else if (session.getSessionType().toLowerCase().contains("qualify")) {
-            sessionType = SessionType.QUALIFY;
+            sessionType = IRSessionType.QUALIFY;
         } else if (session.getSessionType().toLowerCase().contains("race")) {
-            sessionType = SessionType.RACE;
+            sessionType = IRSessionType.RACE;
         }
 
         return sessionType;

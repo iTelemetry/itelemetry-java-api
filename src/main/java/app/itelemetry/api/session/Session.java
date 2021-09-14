@@ -1,6 +1,6 @@
 package app.itelemetry.api.session;
 
-import app.itelemetry.data.messages.protos.SessionType;
+import app.itelemetry.api.iracing.yml.IRSessionType;
 
 import java.time.ZonedDateTime;
 
@@ -33,6 +33,6 @@ public interface Session {
 
     int getLapsToAverage();
 
-    SessionType getType();
+    IRSessionType getType();
 
 }

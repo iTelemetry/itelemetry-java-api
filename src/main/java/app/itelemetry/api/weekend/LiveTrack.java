@@ -1,20 +1,25 @@
 package app.itelemetry.api.weekend;
 
-import app.itelemetry.client.iracing.yml.IRSession;
-import app.itelemetry.client.iracing.yml.IRWeekendInfo;
-
-import static app.itelemetry.client.iracing.memory.MemoryMapImpl.MAP;
+import app.itelemetry.api.iracing.memory.MemoryMap;
+import app.itelemetry.api.iracing.yml.IRSession;
+import app.itelemetry.api.iracing.yml.IRWeekendInfo;
 
 public class LiveTrack implements Track {
+    
+    private final MemoryMap map;
+
+    public LiveTrack(MemoryMap map) {
+        this.map = map;
+    }
 
     private IRSession getIRSession() {
-        return MAP.getData().getSessionInfo().getSessions().get(
-                (int) MAP.getHeader("SessionNum").getValue()
+        return map.getData().getSessionInfo().getSessions().get(
+                (int) map.getHeader("SessionNum").getValue()
         );
     }
 
     private IRWeekendInfo getWeekendInfo() {
-        return MAP.getData().getWeekendInfo();
+        return map.getData().getWeekendInfo();
     }
 
     @Override
@@ -104,12 +109,12 @@ public class LiveTrack implements Track {
 
     @Override
     public float getStartFinishTemperature() {
-        return (Float) MAP.getHeader("TrackTemp").getValue();
+        return (Float) map.getHeader("TrackTemp").getValue();
     }
 
     @Override
     public float getCrewTemperature() {
-        return (Float) MAP.getHeader("TrackTempCrew").getValue();
+        return (Float) map.getHeader("TrackTempCrew").getValue();
     }
 
     @Override

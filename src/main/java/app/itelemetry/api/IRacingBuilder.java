@@ -1,7 +1,11 @@
 package app.itelemetry.api;
 
-public interface IRacingBuilder {
+import app.itelemetry.api.iracing.memory.MemoryMap;
 
-    IRacingService build();
+public interface IRacingBuilder<T extends IRacingBuilder<?, R>, R extends IRacingService> {
+
+    T withMemoryMap(MemoryMap map);
+
+    R build();
 
 }

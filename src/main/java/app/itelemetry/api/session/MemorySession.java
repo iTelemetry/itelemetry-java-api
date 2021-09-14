@@ -1,6 +1,6 @@
 package app.itelemetry.api.session;
 
-import app.itelemetry.data.messages.protos.SessionType;
+import app.itelemetry.api.iracing.yml.IRSessionType;
 
 import java.time.ZonedDateTime;
 
@@ -17,7 +17,7 @@ public class MemorySession implements Session {
     private double runningTime;
     private double timeRemaining;
     private int lapsToAverage;
-    private SessionType type;
+    private IRSessionType type;
 
     public MemorySession(Session session) {
         this.session = session;
@@ -123,11 +123,11 @@ public class MemorySession implements Session {
     }
 
     @Override
-    public SessionType getType() {
+    public IRSessionType getType() {
         return type;
     }
 
-    public void setType(SessionType type) {
+    public void setType(IRSessionType type) {
         this.type = type;
     }
 

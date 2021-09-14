@@ -1,11 +1,13 @@
 package app.itelemetry.api.session;
 
+import app.itelemetry.api.iracing.memory.MemoryMap;
+
 public class MemorySessionFlags extends AbsSessionFlags {
 
     private final int value;
 
-    public MemorySessionFlags() {
-        this(LiveSessionFlags.getCurrentValue());
+    public MemorySessionFlags(MemoryMap map) {
+        this(LiveSessionFlags.getCurrentValue(map));
     }
 
     public MemorySessionFlags(int value) {

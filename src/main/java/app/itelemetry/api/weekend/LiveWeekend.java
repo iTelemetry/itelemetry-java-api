@@ -1,13 +1,18 @@
 package app.itelemetry.api.weekend;
 
-import app.itelemetry.client.iracing.yml.IRWeekendInfo;
-
-import static app.itelemetry.client.iracing.memory.MemoryMapImpl.MAP;
+import app.itelemetry.api.iracing.memory.MemoryMap;
+import app.itelemetry.api.iracing.yml.IRWeekendInfo;
 
 public class LiveWeekend implements Weekend {
+    
+    private final MemoryMap map;
+
+    public LiveWeekend(MemoryMap map) {
+        this.map = map;
+    }
 
     private IRWeekendInfo getWeekendInfo() {
-        return MAP.getData().getWeekendInfo();
+        return map.getData().getWeekendInfo();
     }
 
     @Override
@@ -97,7 +102,7 @@ public class LiveWeekend implements Weekend {
 
     @Override
     public Track getTrack() {
-        return new LiveTrack();
+        return new LiveTrack(map);
     }
 
 }
